@@ -7,7 +7,7 @@ class Ns
       raise "Don't know how to make module/class:methods pairs out of #{use_spec.class}"
     end
   end
-  
+
   def self.populate(obj, use_spec)
     obj.tap do |o|
       to_pairs(use_spec).each do |pkg, method_names|
