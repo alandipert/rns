@@ -18,7 +18,7 @@ module Arithmetic
 end
 
 module Statistics
-  def self.avg(arr); arr.reduce(:+) / arr.count; end
+  def self.avg(arr); arr.reduce(:+).to_f / arr.count end
 end
 
 class Main
