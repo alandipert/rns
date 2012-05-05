@@ -53,3 +53,9 @@ Ruby has good functional programming support, but the class and module
 system doesn't lend itself to organizing and accessing functions.
 With `ns` I hope to make it at least slightly easier to build Ruby
 programs primarily out of pure functions.
+
+# Thanks
+
+To [Sam Umbach](https://twitter.com/samumbach) for helping me tame the
+eigenclass, and to my employer [Relevance](http://thinkrelevance.com)
+for indulging me with time to work on free software.
