@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ns (0.0.1)
+    rns (0.0.1)
 
 GEM
   remote: http://rubygems.org/
@@ -35,7 +35,7 @@ PLATFORMS
 DEPENDENCIES
   guard
   guard-rspec
-  ns!
   rake
+  rns!
   rspec
   simplecov

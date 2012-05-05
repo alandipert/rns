@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), *%w[.. lib ns])
+require File.join(File.dirname(__FILE__), *%w[.. lib rns])
 
 RSpec.configure do |config|
   config.filter_run :focused => true

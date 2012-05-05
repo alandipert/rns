@@ -1,4 +1,4 @@
-ns is distributed under the following terms:
+rns is distributed under the following terms:
 
 Copyright (c) Alan Dipert <alan@dipert.org>. All rights reserved.
 

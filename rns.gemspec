@@ -1,13 +1,13 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "ns/version"
+require "rns/version"
 
 Gem::Specification.new do |s|
-  s.name        = "ns"
-  s.version     = Ns::VERSION
+  s.name        = "rns"
+  s.version     = Rns::VERSION
   s.authors     = ["Alan Dipert"]
   s.email       = ["alan@dipert.org"]
-  s.homepage    = "http://github.com/alandipert/ns"
+  s.homepage    = "http://github.com/alandipert/rns"
   s.summary     = %q{A library for namespacing pure functions.}
   s.license     = "BSD-new"
   s.description = %q{ns makes it easier to write Ruby programs functionally.}

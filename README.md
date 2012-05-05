@@ -1,16 +1,16 @@
-`ns`, which stands for "namespace", is a small library for using
-classes and modules as packages of functions in order to support
+`rns`, which stands for "Ruby namespaces", is a small library for
+using classes and modules as packages of functions in order to support
 functional programming in Ruby.  It is inspired by
 [Clojure's](http://clojure.org) `ns` macro and namespace system.
 
-[![Build Status](https://secure.travis-ci.org/alandipert/ns.png)](http://travis-ci.org/alandipert/ns)
+[![Build Status](https://secure.travis-ci.org/alandipert/rns.png)](http://travis-ci.org/alandipert/rns)
 
 # Usage
 
 ## Importing Methods into Classes
 
 ```ruby
-require 'ns'
+require 'rns'
 
 module Arithmetic
   def self.dec(n) n - 1; end
@@ -21,7 +21,7 @@ module Statistics
   def self.avg(arr); arr.reduce(:+) / arr.count; end
 end
 
-class Main < Ns
+class Main < Rns
   def use
     {Math       => [:inc],
      Statistics => [:avg]}
@@ -38,20 +38,20 @@ Main.new.main
 ## Importing Methods into Blocks
 
 ```ruby
-Ns::using [Math, [:inc], Statistics, [:avg]] do
+Rns::using [Math, [:inc], Statistics, [:avg]] do
   puts avg((1..10).to_a.map(&method(:inc)))
 end
 ```
 
 Please see the
-[tests](https://github.com/alandipert/ns/tree/master/spec/ns) for more
+[tests](https://github.com/alandipert/rns/tree/master/spec/rns) for more
 usage examples.
 
 # Rationale
 
 Ruby has good functional programming support, but the class and module
 system doesn't lend itself to organizing and accessing functions.
-With `ns` I hope to make it at least slightly easier to build Ruby
+With `rns` I hope to make it at least slightly easier to build Ruby
 programs primarily out of pure functions.
 
 # Thanks

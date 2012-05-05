@@ -1,7 +1,7 @@
 require File.join(File.dirname(__FILE__), *%w[.. spec_helper.rb])
-require 'ns'
+require 'rns'
 
-describe Ns do
+describe Rns do
   context 'adding methods to classes' do
     it "works" do
       (1 + 1).should == 2

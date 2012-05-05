@@ -1,4 +1,4 @@
-class Ns
+class Rns
   def self.to_pairs(use_spec)
     case use_spec
     when Array then use_spec.each_slice(2).reduce([]){|xs,y| xs + [y]}
@@ -21,10 +21,10 @@ class Ns
   end
 
   def initialize
-    Ns::populate(self, use)
+    Rns::populate(self, use)
   end
 
   def self.using(use_spec, &blk)
-    blk[Ns::populate(Object.new, use_spec)]
+    blk[Rns::populate(Object.new, use_spec)]
   end
 end
