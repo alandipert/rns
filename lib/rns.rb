@@ -5,9 +5,20 @@ module Rns
 
   def self.add_methods(to, use_spec)
     use_spec.to_a.each do |from, method_names|
-      method_names.each do |name|
-        to.send(:define_method, name) do |*args|
-          from.method(name).call(*args)
+      if (method_names.is_a? Hash)
+        add_methods(to, method_names.map do |k,v|
+                      #TODO: is there a better way to construct modules?
+                      {eval(from.to_s + "::" + k.to_s) => v}
+                    end.reduce({}){|l,r| l.merge(r)})
+      else
+        method_names.each do |name|
+          if (name.is_a? Hash)
+            add_methods(to, {from => name})
+          else
+            to.send(:define_method, name) do |*args|
+              from.method(name).call(*args)
+            end
+          end
         end
       end
     end
