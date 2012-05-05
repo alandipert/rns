@@ -62,7 +62,7 @@ describe Rns do
     it "works with mix of module declaration styles" do
       Rns::using(Math::Arithmetic => [:inc],
                  Math => [:identity,
-                         {:Statistics => [:avg]}]) do
+                          {:Statistics => [:avg]}]) do
         identity(1).should == 1
         inc(10).should == 11
         avg((1..10).to_a.map(&method(:inc))).should == 6.5
