@@ -46,11 +46,5 @@ describe Rns do
         avg((1..10).to_a.map(&method(:inc))).should == 6.5
       end
     end
-
-    it "works using an array" do
-      Rns::using [Arithmetic, [:inc], Statistics, [:avg]] do
-        avg((1..10).to_a.map(&method(:inc))).should == 6.5
-      end
-    end
   end
 end

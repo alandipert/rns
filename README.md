@@ -13,8 +13,10 @@ functional programming in Ruby.  It is inspired by
 require 'rns'
 
 module Arithmetic
-  def self.dec(n) n - 1; end
-  def self.inc(n) n + 1; end
+  class << self
+    def dec(n) n - 1 end
+    def inc(n) n + 1 end
+  end
 end
 
 module Statistics
@@ -38,7 +40,7 @@ Main.new.main
 ## Importing Methods into Blocks
 
 ```ruby
-Rns::using [Arithmetic, [:inc], Statistics, [:avg]] do
+Rns::using(Arithmetic => [:inc], Statistics => [:avg]) do
   puts avg((1..10).to_a.map(&method(:inc)))
 end
 ```
