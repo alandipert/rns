@@ -21,14 +21,14 @@ module Statistics
   def self.avg(arr); arr.reduce(:+) / arr.count; end
 end
 
-class Main < Rns
-  def use
-    {Math       => [:inc],
-     Statistics => [:avg]}
-  end
+class Main
+  include Rns
+  
+  extend_specified Arithmetic => [:inc]
+  include_specified Statistics => [:avg]
 
   def main
-    puts "1+1 is #{inc 1} and the average of [1,2,3] is #{avg [1,2,3]}"
+    puts "1+1 is #{self.class.inc 1} and the average of [1,2,3] is #{avg [1,2,3]}"
   end
 end
 
