@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.homepage    = "http://github.com/alandipert/rns"
   s.summary     = %q{A library for namespacing pure functions.}
   s.license     = "BSD-new"
-  s.description = %q{ns makes it easier to write Ruby programs functionally.}
+  s.description = %q{rns is a namespace management library designed to ease functional programming in Ruby.}
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
