@@ -23,7 +23,7 @@ end
 
 class Main < Rns
   def use
-    {Math       => [:inc],
+    {Arithmetic => [:inc],
      Statistics => [:avg]}
   end
 
@@ -38,7 +38,7 @@ Main.new.main
 ## Importing Methods into Blocks
 
 ```ruby
-Rns::using [Math, [:inc], Statistics, [:avg]] do
+Rns::using [Arithmetic, [:inc], Statistics, [:avg]] do
   puts avg((1..10).to_a.map(&method(:inc)))
 end
 ```
