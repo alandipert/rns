@@ -34,9 +34,6 @@ class Thing
   end
 end
 
-# p Kernel.const_get("Math::Statistics")
-p Math.const_get('Statistics')
-
 describe Rns do
   describe 'helper functions' do
     Rns::using(Rns => [:merge_with],
