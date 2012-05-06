@@ -41,7 +41,7 @@ module Rns
       (m, *more) = module_names
       more.reduce(Kernel.const_get(m)){|m, s| m.const_get(s)}
     end
-    
+
     def add_methods(to, use_spec)
       use_spec.to_a.each do |from, sub_spec|
         if (sub_spec.is_a? Hash)
