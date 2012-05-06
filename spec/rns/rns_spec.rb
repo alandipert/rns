@@ -98,5 +98,12 @@ describe Rns do
         avg((1..10).to_a.map(&method(:inc))).should == 6.5
       end
     end
+
+    it "does not modify Object" do
+      Rns::using(Math::Arithmetic => [:inc]) do
+        # do nothing
+      end
+      lambda { Object.new.inc 1 }.should raise_error(NoMethodError)
+    end
   end
 end
