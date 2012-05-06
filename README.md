@@ -24,10 +24,8 @@ module Statistics
 end
 
 class Main
-  include Rns
-  
-  extend_specified Arithmetic => [:inc]
-  include_specified Statistics => [:avg]
+  extend Rns.module_with(Arithmetic => [:inc])
+  include Rns.module_with(Statistics => [:avg])
 
   def main
     puts "1+1 is #{self.class.inc 1} and the average of [1,2,3] is #{avg [1,2,3]}"

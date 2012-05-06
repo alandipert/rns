@@ -19,11 +19,10 @@ module Math
   end
 end
 
-class Thing
-  include Rns
 
-  extend_specified Math::Arithmetic => [:inc]
-  include_specified Math::Statistics => [:avg]
+class Thing
+  extend Rns.module_with(Math::Arithmetic => [:inc])
+  include Rns.module_with(Math::Statistics => [:avg])
 
   def inced_one
     self.class.inc 1

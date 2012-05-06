@@ -1,8 +1,4 @@
 module Rns
-  def self.included(base)
-    base.extend(ClassMethods)
-  end
-
   class << self
     def f(m)
       lambda{|*args| send(m, *args)}
@@ -42,6 +38,10 @@ module Rns
       more.reduce(Kernel.const_get(m)){|m, s| m.const_get(s)}
     end
 
+    def module_with(use_spec)
+      Module.new.tap {|m| add_methods(m, use_spec) }
+    end
+
     def add_methods(to, use_spec)
       use_spec.to_a.each do |from, sub_spec|
         if (sub_spec.is_a? Hash)
@@ -61,17 +61,6 @@ module Rns
           end
         end
       end
-    end
-  end
-
-  module ClassMethods
-    def include_specified(use_spec)
-      Rns::add_methods(self, use_spec)
-    end
-
-    def extend_specified(use_spec)
-      singleton_class = class << self; self; end
-      Rns::add_methods(singleton_class, use_spec)
     end
   end
 
