@@ -8,6 +8,7 @@ module Math
     class << self
       def dec(n) n - one end
       def inc(n) n + one end
+      def add(x,y) x + y end
       private
       def one() 1 end
     end
@@ -33,7 +34,39 @@ class Thing
   end
 end
 
+# p Kernel.const_get("Math::Statistics")
+p Math.const_get('Statistics')
+
 describe Rns do
+  describe 'helper functions' do
+    Rns::using(Rns => [:merge_with],
+               Math::Arithmetic => [:inc, :add]) do
+
+      sum = lambda{|*xs| xs.reduce(:+)}
+
+      context 'merge_with' do
+        it 'merges with a proc' do
+          merge_with(sum, *(1..10).map{|n| {x: n}})[:x].should == 55
+          merge_with(sum,
+                     {x: 10, y: 20},
+                     {x: 3, z: 30}).should == {x: 13, y: 20, z: 30}
+        end
+
+        it 'merges with a symbol representing an Rns import' do
+          merge_with(:add, {a: 10}, {a: 20}).should == {a: 30}
+        end
+
+        it "uses the merge object's method if passed a symbol not imported with Rns" do
+          merge_with(:+,
+                     {:x => [:something]},
+                     {:x => [:else]}).should == {:x => [:something, :else]}
+
+          merge_with(:+, {x: 10}, {x: 20}).should == {x: 30}
+        end
+      end
+    end
+  end
+
   context 'adding methods to classes' do
     it "works" do
       Thing.new.average.should == 20

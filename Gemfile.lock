@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rns (0.0.2)
+    rns (0.0.3)
 
 GEM
   remote: http://rubygems.org/

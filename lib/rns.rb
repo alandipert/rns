@@ -3,15 +3,55 @@ module Rns
     base.extend(ClassMethods)
   end
 
+  class << self
+    def f(m)
+      lambda{|*args| send(m, *args)}
+    end
+
+    def assoc!(h, k, v)
+      h.tap{|o| o[k] = v}
+    end
+
+    def merge_with(f, *hshs)
+      merge_values = if (f.is_a? Symbol)
+                       if (methods.include? f)
+                         #Use Rns-imported method
+                         self.f(f)
+                       else
+                         #Use the left merge object's method
+                         lambda{|l,r| l.send(f, r)}
+                       end
+                     else
+                       f
+                     end
+      merge_entry = lambda do |h, (k,v)|
+        if (h.has_key?(k))
+          assoc!(h, k, merge_values[h[k], v])
+        else
+          assoc!(h, k, v)
+        end
+      end
+      merge2 = lambda do |h1,h2|
+        h2.to_a.reduce(h1, &merge_entry)
+      end
+      ([{}] + hshs).reduce(&merge2)
+    end
+  end
+
+  def self.constant_for(module_names)
+    (m, *more) = module_names
+    more.reduce(Kernel.const_get(m)){|m, s| m.const_get(s)}
+  end
+
   def self.add_methods(to, use_spec)
-    use_spec.to_a.each do |from, method_names|
-      if (method_names.is_a? Hash)
-        add_methods(to, method_names.map do |k,v|
-                      #TODO: is there a better way to construct modules?
-                      {eval(from.to_s + "::" + k.to_s) => v}
-                    end.reduce({}){|l,r| l.merge(r)})
+    use_spec.to_a.each do |from, sub_spec|
+      if (sub_spec.is_a? Hash)
+        qualified_specs = sub_spec.map do |k,v|
+          {constant_for([from, k].map(&:to_s)) => v}
+        end
+        add_methods(to, merge_with(:+, *qualified_specs))
       else
-        method_names.each do |name|
+        sub_spec.each do |name|
           if (name.is_a? Hash)
             add_methods(to, {from => name})
           else
