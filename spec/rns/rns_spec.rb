@@ -40,26 +40,14 @@ describe Rns do
 
       sum = lambda{|*xs| xs.reduce(:+)}
 
-      context 'merge_with' do
-        it 'merges with a proc' do
-          merge_with(sum, *(1..10).map{|n| {x: n}})[:x].should == 55
-          merge_with(sum,
-                     {x: 10, y: 20},
-                     {x: 3, z: 30}).should == {x: 13, y: 20, z: 30}
-        end
+      merge_with(sum, *(1..10).map{|n| {x: n}})[:x].should == 55
+      merge_with(sum,
+                 {x: 10, y: 20},
+                 {x: 3, z: 30}).should == {x: 13, y: 20, z: 30}
 
-        it 'merges with a symbol representing an Rns import' do
-          merge_with(:add, {a: 10}, {a: 20}).should == {a: 30}
-        end
-
-        it "uses the merge object's method if passed a symbol not imported with Rns" do
-          merge_with(:+,
-                     {:x => [:something]},
-                     {:x => [:else]}).should == {:x => [:something, :else]}
-
-          merge_with(:+, {x: 10}, {x: 20}).should == {x: 30}
-        end
-      end
+      merge_with(lambda{|l,r| l.send(:+, r)},
+                 {:x => [:something]},
+                 {:x => [:else]}).should == {:x => [:something, :else]}
     end
   end
 
@@ -111,6 +99,5 @@ describe Rns do
       end
       lambda { Class.new.inc 1 }.should raise_error(NoMethodError)
     end
-
   end
 end

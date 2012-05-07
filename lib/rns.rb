@@ -9,20 +9,9 @@ module Rns
     end
 
     def merge_with(f, *hshs)
-      merge_values = if (f.is_a? Symbol)
-                       if (methods.include? f)
-                         #Use Rns-imported method
-                         self.f(f)
-                       else
-                         #Use the left merge object's method
-                         lambda{|l,r| l.send(f, r)}
-                       end
-                     else
-                       f
-                     end
       merge_entry = lambda do |h, (k,v)|
         if (h.has_key?(k))
-          assoc!(h, k, merge_values[h[k], v])
+          assoc!(h, k, f[h[k], v])
         else
           assoc!(h, k, v)
         end
@@ -63,16 +52,8 @@ module Rns
       end
     end
 
-    @@_gensym = 1000
-
-    def gensym(prefix = 'G')
-      (prefix + (@@_gensym += 1).to_s)
-    end
-
     def using(use_spec, &blk)
-      klass_name = gensym('Klass')
-      class_eval("class #{klass_name}; end")
-      klass = const_get(klass_name)
+      klass = Class.new
       add_methods(klass, use_spec)
       klass.new.instance_eval(&blk)
     end
