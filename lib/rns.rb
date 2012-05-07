@@ -23,7 +23,7 @@ module Rns
     end
 
     def constant_for(module_names)
-      (m, *more) = module_names
+      (m, *more) = module_names.map{|n| n.split("::")}.flatten
       more.reduce(Kernel.const_get(m)){|m, s| m.const_get(s)}
     end
 
@@ -31,23 +31,27 @@ module Rns
       Module.new.tap {|m| add_methods(m, use_spec) }
     end
 
+    def process_spec_entry(entry)
+      (k,v) = entry
+      if (v.is_a? Array)
+        v.map{|x| process_entry([k,x])}
+      elsif (v.is_a? Hash)
+        v.map do |x,y|
+          process_entry([constant_for([k, x].map(&:to_s)), y])
+        end
+      else
+        [k,v]
+      end
+    end
+
+    def process_spec(use_spec)
+      use_spec.map(&method(:process_spec_entry)).flatten.each_slice(2).to_a
+    end
+
     def add_methods(to, use_spec)
-      use_spec.to_a.each do |from, sub_spec|
-        if (sub_spec.is_a? Hash)
-          qualified_specs = sub_spec.map do |k,v|
-            {constant_for([from, k].map(&:to_s)) => v}
-          end
-          add_methods(to, merge_with(:+, *qualified_specs))
-        else
-          sub_spec.each do |name|
-            if (name.is_a? Hash)
-              add_methods(to, {from => name})
-            else
-              to.send(:define_method, name) do |*args|
-                from.method(name).call(*args)
-              end
-            end
-          end
+      process_spec(use_spec).each do |from, method|
+        to.send(:define_method, method) do |*args|
+          from.method(method).call(*args)
         end
       end
     end

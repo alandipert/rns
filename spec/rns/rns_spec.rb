@@ -16,6 +16,9 @@ module Math
 
   module Statistics
     def self.avg(arr); arr.reduce(:+).to_f / arr.count end
+    module Foo
+      def self.blah; :quux end
+    end
   end
 end
 
@@ -98,6 +101,25 @@ describe Rns do
         # do nothing
       end
       lambda { Class.new.inc 1 }.should raise_error(NoMethodError)
+    end
+
+    it 'processes specs correctly' do
+      Rns::using(Rns => [:process_spec]) do
+        process_spec({Math => [:inc, :dec]}).
+          should == [[Math, :inc], [Math, :dec]]
+      end
+      
+      Rns::using(Rns => [:process_spec]) do
+        spec = {Math::Arithmetic => [:inc],
+                Math => [:identity,
+                         {:Statistics => [:avg,
+                                          {:Foo => [:blah, :quux]}]}]}
+        process_spec(spec).should == [[Math::Arithmetic, :inc],
+                                      [Math, :identity],
+                                      [Math::Statistics, :avg],
+                                      [Math::Statistics::Foo, :blah],
+                                      [Math::Statistics::Foo, :quux]]
+      end
     end
   end
 end
