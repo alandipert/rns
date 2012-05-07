@@ -45,8 +45,8 @@ module Util
 end
 
 class Thing
-  extend Rns.module_with(Math::Arithmetic => [:inc])
-  include Rns.module_with(Math::Statistics => [:avg])
+  extend Rns.use(Math::Arithmetic => [:inc])
+  include Rns.use(Math::Statistics => [:avg])
 
   def self.inced_one
     inc 1

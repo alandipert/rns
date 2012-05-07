@@ -5,7 +5,7 @@ module Rns
       more.reduce(Kernel.const_get(m)){|m, s| m.const_get(s)}
     end
 
-    def module_with(use_spec)
+    def use(use_spec)
       Module.new.tap {|m| add_methods(m, use_spec) }
     end
 
