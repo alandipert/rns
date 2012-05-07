@@ -62,9 +62,20 @@ module Rns
         end
       end
     end
-  end
-
-  def self.using(use_spec, &blk)
-    blk[Object.new.tap{|o| Rns::add_methods(o.class, use_spec)}]
+    
+    @@_gensym = 1000
+    
+    def gensym(prefix = 'G')
+      (prefix + (@@_gensym += 1).to_s)
+    end
+    
+    def using(use_spec, &blk)
+      klass_name = gensym('Klass')
+      class_eval("class #{klass_name}; end")
+      const_get(klass_name).new.tap do |o|
+        add_methods(o.class, use_spec)
+        o.instance_eval(&blk)
+      end
+    end
   end
 end

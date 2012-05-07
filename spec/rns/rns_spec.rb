@@ -34,34 +34,34 @@ class Thing
 end
 
 describe Rns do
-  describe 'helper functions' do
-    Rns::using(Rns => [:merge_with],
-               Math::Arithmetic => [:inc, :add]) do
+  # describe 'helper functions' do
+  #   Rns::using(Rns => [:merge_with],
+  #              Math::Arithmetic => [:inc, :add]) do
 
-      sum = lambda{|*xs| xs.reduce(:+)}
+  #     sum = lambda{|*xs| xs.reduce(:+)}
 
-      context 'merge_with' do
-        it 'merges with a proc' do
-          merge_with(sum, *(1..10).map{|n| {x: n}})[:x].should == 55
-          merge_with(sum,
-                     {x: 10, y: 20},
-                     {x: 3, z: 30}).should == {x: 13, y: 20, z: 30}
-        end
+  #     context 'merge_with' do
+  #       it 'merges with a proc' do
+  #         merge_with(sum, *(1..10).map{|n| {x: n}})[:x].should == 55
+  #         merge_with(sum,
+  #                    {x: 10, y: 20},
+  #                    {x: 3, z: 30}).should == {x: 13, y: 20, z: 30}
+  #       end
 
-        it 'merges with a symbol representing an Rns import' do
-          merge_with(:add, {a: 10}, {a: 20}).should == {a: 30}
-        end
+  #       it 'merges with a symbol representing an Rns import' do
+  #         merge_with(:add, {a: 10}, {a: 20}).should == {a: 30}
+  #       end
 
-        it "uses the merge object's method if passed a symbol not imported with Rns" do
-          merge_with(:+,
-                     {:x => [:something]},
-                     {:x => [:else]}).should == {:x => [:something, :else]}
+  #       it "uses the merge object's method if passed a symbol not imported with Rns" do
+  #         merge_with(:+,
+  #                    {:x => [:something]},
+  #                    {:x => [:else]}).should == {:x => [:something, :else]}
 
-          merge_with(:+, {x: 10}, {x: 20}).should == {x: 30}
-        end
-      end
-    end
-  end
+  #         merge_with(:+, {x: 10}, {x: 20}).should == {x: 30}
+  #       end
+  #     end
+  #   end
+  # end
 
   context 'adding methods to classes' do
     it "works" do
@@ -81,22 +81,22 @@ describe Rns do
       end
     end
 
-    it "works with nested modules" do
-      Rns::using(Math => {:Arithmetic => [:inc],
-                          :Statistics => [:avg]}) do
-        avg((1..10).to_a.map(&method(:inc))).should == 6.5
-      end
-    end
+    # it "works with nested modules" do
+    #   Rns::using(Math => {:Arithmetic => [:inc],
+    #                       :Statistics => [:avg]}) do
+    #     avg((1..10).to_a.map(&method(:inc))).should == 6.5
+    #   end
+    # end
 
-    it "works with mix of module declaration styles" do
-      Rns::using(Math::Arithmetic => [:inc],
-                 Math => [:identity,
-                          {:Statistics => [:avg]}]) do
-        identity(1).should == 1
-        inc(10).should == 11
-        avg((1..10).to_a.map(&method(:inc))).should == 6.5
-      end
-    end
+    # it "works with mix of module declaration styles" do
+    #   Rns::using(Math::Arithmetic => [:inc],
+    #              Math => [:identity,
+    #                       {:Statistics => [:avg]}]) do
+    #     identity(1).should == 1
+    #     inc(10).should == 11
+    #     avg((1..10).to_a.map(&method(:inc))).should == 6.5
+    #   end
+    # end
 
     it "does not modify Object" do
       Rns::using(Math::Arithmetic => [:inc]) do
@@ -104,5 +104,13 @@ describe Rns do
       end
       lambda { Object.new.inc 1 }.should raise_error(NoMethodError)
     end
+
+    it "does not modify Class" do
+      Rns::using(Math::Arithmetic => [:inc]) do
+        # do nothing
+      end
+      lambda { Class.new.inc 1 }.should raise_error(NoMethodError)
+    end
+
   end
 end
