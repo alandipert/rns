@@ -24,8 +24,8 @@ class Thing
   extend Rns.module_with(Math::Arithmetic => [:inc])
   include Rns.module_with(Math::Statistics => [:avg])
 
-  def inced_one
-    self.class.inc 1
+  def self.inced_one
+    inc 1
   end
 
   def average
@@ -57,7 +57,11 @@ describe Rns do
     end
 
     it "works with private module methods" do
-      Thing.new.inced_one.should == 2
+      Thing.inced_one.should == 2
+    end
+
+    it "should add methods privately" do
+      lambda { Thing.new.avg [11, 42, 7] }.should raise_error(NoMethodError)
     end
   end
 

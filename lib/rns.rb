@@ -46,6 +46,7 @@ module Rns
               to.send(:define_method, name) do |*args|
                 from.method(name).call(*args)
               end
+              to.send(:private, name)
             end
           end
         end
