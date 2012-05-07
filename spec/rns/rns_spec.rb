@@ -22,6 +22,27 @@ module Math
   end
 end
 
+module Util
+  class << self
+    def assoc!(h, k, v)
+      h.tap{|o| o[k] = v}
+    end
+
+    def merge_with(f, *hshs)
+      merge_entry = lambda do |h, (k,v)|
+        if (h.has_key?(k))
+          assoc!(h, k, f[h[k], v])
+        else
+          assoc!(h, k, v)
+        end
+      end
+      merge2 = lambda do |h1,h2|
+        h2.to_a.reduce(h1, &merge_entry)
+      end
+      ([{}] + hshs).reduce(&merge2)
+    end
+  end
+end
 
 class Thing
   extend Rns.module_with(Math::Arithmetic => [:inc])
@@ -37,23 +58,6 @@ class Thing
 end
 
 describe Rns do
-  describe 'helper functions' do
-    Rns::using(Rns => [:merge_with],
-               Math::Arithmetic => [:inc, :add]) do
-
-      sum = lambda{|*xs| xs.reduce(:+)}
-
-      merge_with(sum, *(1..10).map{|n| {x: n}})[:x].should == 55
-      merge_with(sum,
-                 {x: 10, y: 20},
-                 {x: 3, z: 30}).should == {x: 13, y: 20, z: 30}
-
-      merge_with(lambda{|l,r| l.send(:+, r)},
-                 {:x => [:something]},
-                 {:x => [:else]}).should == {:x => [:something, :else]}
-    end
-  end
-
   context 'adding methods to classes' do
     it "works" do
       Thing.new.average.should == 20
@@ -65,6 +69,24 @@ describe Rns do
   end
 
   context 'adding methods to blocks' do
+
+    it 'computes' do
+      Rns::using(Util => [:merge_with],
+                 Math::Arithmetic => [:inc, :add]) do
+
+        sum = lambda{|*xs| xs.reduce(:+)}
+
+        merge_with(sum, *(1..10).map{|n| {x: n}})[:x].should == 55
+        merge_with(sum,
+                   {x: 10, y: 20},
+                   {x: 3, z: 30}).should == {x: 13, y: 20, z: 30}
+
+        merge_with(lambda{|l,r| l.send(:+, r)},
+                   {:x => [:something]},
+                   {:x => [:else]}).should == {:x => [:something, :else]}
+      end
+    end
+
     it "works with individual modules" do
       Rns::using(Math::Arithmetic => [:inc],
                  Math::Statistics => [:avg]) do
@@ -108,7 +130,7 @@ describe Rns do
         process_spec({Math => [:inc, :dec]}).
           should == [[Math, :inc], [Math, :dec]]
       end
-      
+
       Rns::using(Rns => [:process_spec]) do
         spec = {Math::Arithmetic => [:inc],
                 Math => [:identity,
