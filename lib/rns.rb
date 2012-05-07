@@ -69,11 +69,8 @@ module Rns
       (prefix + (@@_gensym += 1).to_s)
     end
 
-    # TODO: This method is horrifying.  Can we do better?
     def using(use_spec, &blk)
-      klass_name = gensym('Klass')
-      class_eval("class #{klass_name}; end")
-      klass = const_get(klass_name)
+      klass = Class.new
       methods.each do |m|
         klass.send(:define_method, m) do |*args|
           lambda{|*args| send(m, *args)}
