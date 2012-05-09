@@ -27,8 +27,12 @@ class Main
   extend Rns.use(Arithmetic => [:inc])
   include Rns.use(Statistics => [:avg])
 
+  def self.incremented(n)
+    "#{n} incremented is #{inc n}"
+  end
+
   def main
-    puts "1+1 is #{self.class.inc 1} and the average of [1,2,3] is #{avg [1,2,3]}"
+    puts "#{self.class.incremented 1} and the average of [1,2,3] is #{avg [1,2,3]}"
   end
 end
 
