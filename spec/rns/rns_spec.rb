@@ -22,6 +22,10 @@ module Math
   end
 end
 
+module BlockTakers
+  def self.takes_block(&blk); yield; end
+end
+
 module Util
   class << self
     def assoc!(h, k, v)
@@ -127,6 +131,14 @@ describe Rns do
         # do nothing
       end
       lambda { Class.new.inc 1 }.should raise_error(NoMethodError)
+    end
+
+    it "imports a method that takes a block" do
+      Rns::using(BlockTakers => [:takes_block]) do
+        takes_block do
+          :returned_from_block
+        end.should == :returned_from_block
+      end
     end
 
     it 'processes specs correctly' do

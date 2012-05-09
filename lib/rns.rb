@@ -31,9 +31,7 @@ module Rns
 
     def add_methods(to, use_spec)
       process_spec(use_spec).each do |from, method|
-        to.send(:define_method, method) do |*args|
-          from.method(method).call(*args)
-        end
+        to.send(:define_method, method, &from.method(method))
         to.send(:private, method)
       end
     end
