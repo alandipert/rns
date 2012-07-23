@@ -1,13 +1,9 @@
 require 'rubygems'
 require 'bundler'
-require "rspec/core/rake_task"
-require 'rake'
+require 'rake/testtask'
 
-desc "Run all specs"
-RSpec::Core::RakeTask.new(:spec) do |t|
-  t.pattern = "spec/**/*_spec.rb"
-  t.ruby_opts = '-Ilib -Ispec -I.'
-  t.rspec_opts = '--color'
+Rake::TestTask.new do |t|
+  t.pattern = "test/*_test.rb"
 end
 
-task :default => :spec
+task :default => :test
