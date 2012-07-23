@@ -64,18 +64,28 @@ class RnsTest < MiniTest::Unit::TestCase
     end
   end
 
-  def test_cvars_cant_be_set
-    m = Rns do
-      def set_cvar
-        @@cvar = "something"
-      end
-    end
+  # Class variable *can* be set on frozen classes starting in Ruby 1.9.3.
+  # It appears to only work in methods defined in the block passed to Class.new:
+  #
+  # $ RBENV_VERSION=1.9.2-p290 ruby -Ilib -rrns -e 'Class.new { def set() @@v = 11 end }.freeze.new.set'
+  # -e:1:in `set': can't modify frozen class (RuntimeError)
+  #   from -e:1:in `<main>'
+  #
+  # $ RBENV_VERSION=1.9.3-p125 ruby -Ilib -rrns -e 'Class.new { def set() @@v = 11 end }.freeze.new.set'
+  # -e:1: warning: class variable access from toplevel
+  #
+  # def test_cvars_cant_be_set
+  #   m = Rns do
+  #     def set_cvar
+  #       @@cvar = "something"
+  #     end
+  #   end
 
-    # this fails on 1.8.7
-    assert_raises_frozen_error do
-      m.set_cvar
-    end
-  end
+  #   # this fails on 1.8.7
+  #   assert_raises_frozen_error do
+  #     m.set_cvar
+  #   end
+  # end
 
   def test_importing_namespaces
     ns = Rns(Math) do
