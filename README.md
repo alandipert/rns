@@ -12,43 +12,33 @@ functional programming in Ruby.  It is inspired by
 ```ruby
 require 'rns'
 
-module Arithmetic
-  class << self
-    def dec(n) n - 1 end
-    def inc(n) n + 1 end
-  end
+Arithmetic = Rns do
+  def dec(n) n - 1 end
+  def inc(n) n + 1 end
 end
 
-module Statistics
-  def self.avg(arr); arr.reduce(:+).to_f / arr.count end
+Statistics = Rns do
+  def avg(arr) arr.reduce(:+).to_f / arr.count end
 end
 
 class Main
-  extend Rns.use(Arithmetic => [:inc])
-  include Rns.use(Statistics => [:avg])
-
-  def self.incremented(n)
-    "#{n} incremented is #{inc n}"
+  Funcs = Rns(Statistics, Arithmetic => [:inc]) do
+    def incremented_avg(nums)
+      avg nums.map(&method(:inc))
+    end
   end
 
   def main
-    puts "#{self.class.incremented 1} and the average of [1,2,3] is #{avg [1,2,3]}"
+    nums = [1, 2, 3]
+    puts "The average of #{nums.inspect} incremented is: #{Funcs.incremented_avg nums}"
   end
 end
 
 Main.new.main
 ```
 
-## Importing Methods into Blocks
-
-```ruby
-Rns::using(Arithmetic => [:inc], Statistics => [:avg]) do
-  puts avg((1..10).to_a.map(&method(:inc)))
-end
-```
-
 Please see the
-[tests](https://github.com/alandipert/rns/tree/master/spec/rns) for more
+[tests](https://github.com/alandipert/rns/tree/master/test) for more
 usage examples.
 
 # Rationale
