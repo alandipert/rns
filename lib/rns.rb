@@ -39,7 +39,7 @@ module Rns
 
       # Imports methods from objects into this namespace class as private instance methods.
       def import(imports)
-        ns_methods = instance_methods()
+        ns_methods = instance_methods.map(&:to_sym)
         @_import_hash = array_to_key_value_tuples(imports).reduce({}) do |h, (obj, methods)|
           if !obj.frozen?
             raise ImportError, "#{obj} cannot be imported into Namespace because it is not frozen"
