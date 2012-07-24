@@ -1,5 +1,6 @@
-require 'minitest/autorun'
+require 'minitest/unit'
 require 'rns'
+MiniTest::Unit.autorun
 
 class RnsTest < MiniTest::Unit::TestCase
 
